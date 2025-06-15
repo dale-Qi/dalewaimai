@@ -43,25 +43,31 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      */
     @Bean
     public Docket docket() {
+        log.info("准备生成接口文档...");
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("苍穹外卖项目接口文档")
+                .title("外卖项目接口文档")
                 .version("2.0")
-                .description("苍穹外卖项目接口文档")
+                .description("外卖项目接口文档")
                 .build();
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.sky.controller"))
+                //扫描所有com.sky.controller包内的类
                 .paths(PathSelectors.any())
                 .build();
         return docket;
     }
 
     /**
-     * 设置静态资源映射
+     * 设置静态资源映射（访问接口文档html、js、css等）
      * @param registry
      */
+    /**没有这个静态资源映射则在"/doc.html"下无法找到该文档
+    相当于把资源固定下来，才能在访问的时候访问得到
+     */
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+        log.info("开始设置静态资源映射...");
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
